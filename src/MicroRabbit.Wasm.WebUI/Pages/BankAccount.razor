@@ -1,0 +1,45 @@
+﻿@page "/bank-accounts"
+
+<h1>Accounts</h1>
+
+@if (Accounts == null)
+{
+    <p>Loading...</p>
+}
+else if (Accounts.Count() == 0)
+{
+    <p>No accounts found.</p>
+}
+else
+{
+    <table class="table tab-content table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Account Type</th>
+                <th>Account Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var account in Accounts)
+            {
+                <tr>
+                    <td>@account.Id</td>
+                    <td>@account.AccountType</td>
+                    <td>@account.AccountBalance.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    public IEnumerable<AccountModel> Accounts=new List<AccountModel>();
+
+    [Inject]
+    protected IAccountService AccountService { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Accounts = await AccountService.GetAccountsAsync();
+    }
+}

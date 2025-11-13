@@ -1,0 +1,36 @@
+﻿@page "/fund-transfer"
+@inject NavigationManager naviation
+<EditForm Model="@accountTransferModel" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="mb-3">
+        <div class="form-group">
+            <label for="fromAccount">From Account:</label>
+            <InputNumber id="fromAccount" class="form-control" @bind-Value="@accountTransferModel.FromAccount" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="form-group">
+            <label for="toAccount">To Account:</label>
+            <InputNumber id="toAccount" class="form-control"  @bind-Value="@accountTransferModel.ToAccount" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="form-group">
+            <label for="transferAmount">Transfer Amount:</label>
+            <InputNumber id="transferAmount" class="form-control" @bind-Value="@accountTransferModel.TransferAmount" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">Submit</button>
+</EditForm>
+
+@code {
+    private AccountTransferModel accountTransferModel = new AccountTransferModel();
+    [Inject]
+    protected IAccountService AccountService { get; set; }
+    private async Task HandleValidSubmit()
+    {
+        await AccountService.SaveAccountTransferAsync(accountTransferModel);
+        naviation.NavigateTo("transfer-logs");
+    }
+}

@@ -1,0 +1,47 @@
+﻿@page "/transfer-logs"
+
+<h1>Account Transfer Logs</h1>
+
+@if (TransferLogList == null)
+{
+    <p>Loading...</p>
+}
+else if (TransferLogList.Count() == 0)
+{
+    <p>No accounts found.</p>
+}
+else
+{
+    <table class="table tab-content table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>From Account</th>
+                <th>To Account</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var account in TransferLogList)
+            {
+                <tr>
+                    <td>@account.Id</td>
+                    <td>@account.FromAccount</td>
+                    <td>@account.ToAccount</td>
+                    <td>@account.TransferAmount.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    public IEnumerable<TransferLogModel> TransferLogList = new List<TransferLogModel>();
+
+    [Inject]
+    protected ITransferService TransferService { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        TransferLogList = await TransferService.GetTransferLogsAsync();
+    }
+}
